@@ -1,0 +1,8 @@
+{
+  "cargoHome": "D:\\YomiBuildTools\\cargo",
+  "rustupHome": "D:\\YomiBuildTools\\rustup",
+  "targetDir": "D:\\YomiBuildTools\\target-yomi",
+  "tempDir": "D:\\YomiBuildTools\\Temp",
+  "jobs": 2,
+  "lowDebugSymbols": true
+}

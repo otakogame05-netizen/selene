@@ -1,0 +1,45 @@
+name: Windows validation
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  desktop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Test frontend
+        run: pnpm test
+      - name: Build frontend
+        run: pnpm build
+      - name: Prepare pinned Suwayomi runtime
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $taskZip = Join-Path $env:RUNNER_TEMP 'suwayomi.zip'
+          $taskRuntime = Join-Path $env:RUNNER_TEMP 'suwayomi-runtime'
+          Invoke-WebRequest 'https://github.com/Suwayomi/Suwayomi-Server/releases/download/v2.4.2366/Suwayomi-Server-v2.4.2366-windows-x64.zip' -OutFile $taskZip
+          if ((Get-FileHash -LiteralPath $taskZip -Algorithm SHA256).Hash -ne 'B955F374A8D94B8D1C2750AE28FA7EB2066B479957561B5BA9CF8AC993C8FC13') { throw 'Unexpected Suwayomi archive checksum' }
+          Expand-Archive -LiteralPath $taskZip -DestinationPath $taskRuntime
+          $taskJars = @(Get-ChildItem -LiteralPath $taskRuntime -Recurse -File -Filter 'Suwayomi-Server.jar')
+          if ($taskJars.Count -ne 1) { throw 'Expected one Suwayomi runtime' }
+          ./scripts/Preparar-Motor.ps1 -RuntimePath $taskJars[0].Directory.Parent.FullName
+      - name: Test native backend
+        run: pnpm test:rust
+      - name: Build desktop and installer
+        run: pnpm desktop:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selene-windows-installer
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error

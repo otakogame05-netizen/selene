@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="crimson" x1="123" y1="120" x2="336" y2="420" gradientUnits="userSpaceOnUse"><stop stop-color="#ff442e"/><stop offset=".5" stop-color="#cc1837"/><stop offset="1" stop-color="#760d2c"/></linearGradient>
+    <linearGradient id="gold" x1="77" y1="55" x2="435" y2="466" gradientUnits="userSpaceOnUse"><stop stop-color="#f4d779"/><stop offset=".5" stop-color="#d4af37"/><stop offset="1" stop-color="#8a641e"/></linearGradient>
+    <mask id="crescent"><circle cx="245" cy="263" r="167" fill="white"/><circle cx="321" cy="192" r="155" fill="black"/></mask>
+  </defs>
+  <circle cx="256" cy="256" r="243" fill="#09090b"/>
+  <circle cx="256" cy="256" r="232" stroke="url(#gold)" stroke-width="7"/>
+  <g mask="url(#crescent)"><circle cx="245" cy="263" r="167" fill="url(#crimson)"/><circle cx="245" cy="263" r="164" stroke="#ff6b4b" stroke-opacity=".45" stroke-width="3"/></g>
+  <path d="m365 133 9 29 29 9-29 9-9 29-9-29-29-9 29-9z" fill="url(#gold)"/>
+  <circle cx="407" cy="247" r="5" fill="#d4af37"/>
+</svg>
